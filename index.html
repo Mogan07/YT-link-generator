@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internal Tool - YouTube Gopos Link Generator</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #0f172a;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #e2e8f0;
+    }
+
+    .card {
+        background: #1e293b;
+        width: 500px;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .header {
+        margin-bottom: 25px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .header p {
+        font-size: 13px;
+        opacity: 0.6;
+        margin-top: 5px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        margin-bottom: 15px;
+        background: #334155;
+        color: white;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #ef4444;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background: #dc2626;
+    }
+
+    .output-box {
+        background: #0f172a;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 13px;
+        word-break: break-all;
+        display: none;
+    }
+
+    .label {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-bottom: 5px;
+    }
+
+    .copy-btn {
+        margin-top: 10px;
+        background: #22c55e;
+    }
+
+    .status {
+        margin-top: 10px;
+        font-size: 12px;
+        opacity: 0.7;
+    }
+
+    .footer {
+        margin-top: 20px;
+        font-size: 11px;
+        opacity: 0.4;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="header">
+        <h1>YouTube Gopos Link Generator</h1>
+        <p>Generates a link that opens Youtube App instead of In-game-Browser</p>
+    </div>
+
+    <input type="text" id="youtubeInput" placeholder="Paste full YouTube link here">
+
+    <button onclick="generate()">Generate Deep Link</button>
+
+    <div class="output-box" id="videoIdBox">
+        <div class="label">Extracted Video ID</div>
+        <div id="videoId"></div>
+    </div>
+
+    <div class="output-box" id="deepLinkBox">
+        <div class="label">Deep Link (Ready to Copy)</div>
+        <div id="deepLink"></div>
+        <button class="copy-btn" onclick="copyDeepLink()">Copy Gopos Link</button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="footer">
+        Internal Tool • Team Utility • v1.0
+    </div>
+
+</div>
+
+<script>
+function extractVideoID(url) {
+    const regex = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+}
+
+function generate() {
+    const input = document.getElementById("youtubeInput").value.trim();
+    const videoID = extractVideoID(input);
+    const status = document.getElementById("status");
+
+    if (!videoID) {
+        status.innerText = "Invalid YouTube link.";
+        status.style.color = "#f87171";
+        return;
+    }
+
+    const deepLink = "vnd.youtube://" + videoID;
+
+    document.getElementById("videoIdBox").style.display = "block";
+    document.getElementById("deepLinkBox").style.display = "block";
+
+    document.getElementById("videoId").innerText = videoID;
+    document.getElementById("deepLink").innerText = deepLink;
+
+    status.innerText = "Deep link generated successfully.";
+    status.style.color = "#4ade80";
+}
+
+function copyDeepLink() {
+    const text = document.getElementById("deepLink").innerText;
+    navigator.clipboard.writeText(text);
+    document.getElementById("status").innerText = "Copied to clipboard.";
+}
+</script>
+
+</body>
+</html>
